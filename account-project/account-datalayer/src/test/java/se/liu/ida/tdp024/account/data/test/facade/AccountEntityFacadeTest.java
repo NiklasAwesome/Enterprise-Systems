@@ -1,9 +1,8 @@
 package se.liu.ida.tdp024.account.data.test.facade;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Test;
@@ -41,16 +40,27 @@ public class AccountEntityFacadeTest {
     public void testGetAll() {
         String[] bankArray = { "1", "2", "3", "4" };
         String[] personArray = { "p1", "p2", "p3", "p4" };
-        ArrayList<Account> accountList = new ArrayList<Account>();
+        List<Account> accountList = new ArrayList<Account>();
 
         for (int i = 0; i < 4; i++) {
             long id = accountEntityFacade.create(bankArray[i], personArray[i], "CHECK");
             accountList.add(accountEntityFacade.find(id));
         }
 
-        ArrayList<Account> findAllList = accountEntityFacade.findAll();
+        List<Account> findAllList = accountEntityFacade.findAll();
 
-        assertTrue(findAllList.containsAll(accountList) && accountList.containsAll(findAllList));
+        assertEquals(4, findAllList.size());
+
+        assertEquals(bankArray[0], findAllList.get(0).getBankKey());
+        assertEquals(bankArray[1], findAllList.get(1).getBankKey());
+        assertEquals(bankArray[2], findAllList.get(2).getBankKey());
+        assertEquals(bankArray[3], findAllList.get(3).getBankKey());
+        assertEquals(personArray[0], findAllList.get(0).getPersonKey());
+        assertEquals(personArray[1], findAllList.get(1).getPersonKey());
+        assertEquals(personArray[2], findAllList.get(2).getPersonKey());
+        assertEquals(personArray[3], findAllList.get(3).getPersonKey());
+       
+
 
     }
 }

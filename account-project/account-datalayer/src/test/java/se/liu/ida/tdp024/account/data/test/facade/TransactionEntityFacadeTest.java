@@ -4,6 +4,9 @@ import se.liu.ida.tdp024.account.data.api.entity.Transaction;
 import se.liu.ida.tdp024.account.data.api.facade.AccountEntityFacade;
 import se.liu.ida.tdp024.account.data.api.facade.TransactionEntityFacade;
 import se.liu.ida.tdp024.account.data.api.util.StorageFacade;
+import se.liu.ida.tdp024.account.data.impl.db.facade.AccountEntityFacadeDB;
+import se.liu.ida.tdp024.account.data.impl.db.facade.TransactionEntityFacadeDB;
+import se.liu.ida.tdp024.account.data.impl.db.util.StorageFacadeDB;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -16,9 +19,9 @@ import org.junit.Test;
 
 public class TransactionEntityFacadeTest {
 
-    private TransactionEntityFacade transactionEntityFacade;
-    private AccountEntityFacade accountEntityFacade;
-    private StorageFacade storageFacade;
+    private TransactionEntityFacade transactionEntityFacade = new TransactionEntityFacadeDB();
+    private AccountEntityFacade accountEntityFacade = new AccountEntityFacadeDB();
+    private StorageFacade storageFacade = new StorageFacadeDB();
 
     @After
     public void tearDown() {
