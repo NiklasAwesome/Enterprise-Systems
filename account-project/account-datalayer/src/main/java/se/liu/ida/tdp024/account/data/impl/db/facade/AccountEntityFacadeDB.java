@@ -50,7 +50,6 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             return em.find(AccountDB.class, id);
 
         } catch (Exception e) {
-            System.out.println("Error in find(): " + e.toString());
             return null;
 
         } finally {
@@ -59,11 +58,12 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Account> findAll() {
         EntityManager em = EMF.getEntityManager();
 
         try {
-            Query query = em.createQuery("SELECT t FROM AccountDB t");
+            Query query = em.createQuery("SELECT a FROM AccountDB a");
             return query.getResultList();
         } catch (Exception e) {
             return null;
