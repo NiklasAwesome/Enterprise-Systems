@@ -1,9 +1,13 @@
 package se.liu.ida.tdp024.account.data.impl.db.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import se.liu.ida.tdp024.account.data.api.entity.Account;
 import se.liu.ida.tdp024.account.data.api.entity.Transaction;
@@ -13,18 +17,19 @@ public class TransactionDB implements Transaction {
     
     @Id
     @GeneratedValue
-    public long id;
+    private long id;
 
-    public String transactionType;
+    private String transactionType;
 
-    public int amount;
+    private int amount;
 
-    public String timestamp;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestamp;
 
-    public String status;
+    private String status;
 
     @ManyToOne(targetEntity = AccountDB.class)
-    public Account account;
+    private Account account;
 
     // --- Getters and Setters --- //
 
@@ -52,11 +57,11 @@ public class TransactionDB implements Transaction {
         this.amount = amount;
     }
 
-    public String getTimestamp() {
+    public Date getTimestamp() {
         return this.timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -74,5 +79,17 @@ public class TransactionDB implements Transaction {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @Override
+    public String toString() {
+        return "{\n" 
+        + "id: " + this.id + ",\n" 
+        + "type: " + this.transactionType + ",\n" 
+        + "amount: " + this.amount + ",\n" 
+        + "TimeStamp: " + this.timestamp + ",\n" 
+        + "Status: " + this.status + ",\n"
+        + "Account: " + this.account + "\n" 
+        + "}";
     }
 }

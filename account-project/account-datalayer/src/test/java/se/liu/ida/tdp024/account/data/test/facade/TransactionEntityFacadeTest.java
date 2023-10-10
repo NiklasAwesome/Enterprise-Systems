@@ -1,5 +1,6 @@
 package se.liu.ida.tdp024.account.data.test.facade;
 
+import se.liu.ida.tdp024.account.data.api.entity.Account;
 import se.liu.ida.tdp024.account.data.api.entity.Transaction;
 import se.liu.ida.tdp024.account.data.api.facade.AccountEntityFacade;
 import se.liu.ida.tdp024.account.data.api.facade.TransactionEntityFacade;
@@ -30,15 +31,40 @@ public class TransactionEntityFacadeTest {
     @Test
     public void testCreateAndFind() {
         long accountID = accountEntityFacade.create("1", "1", "CHECK");
-
+        
         long transactionID = transactionEntityFacade.create("CREDIT", 2, accountID);
+        Account account = accountEntityFacade.find(accountID);
         
         Transaction transaction = transactionEntityFacade.find(transactionID);
+
+        
+        System.out.println(transaction);
 
         assertEquals(transaction.getTransactionType(), "CREDIT");
         assertEquals(transaction.getAmount(), 2);
         assertEquals(transaction.getAccount().getID(), accountID);
+        assertEquals(transaction.getStatus(), "OK");
+        assertEquals(account.getHoldings(), 2);
 
+    }
+
+    @Test
+    public void testCreateAndFindIfFailed() {
+        long accountID = accountEntityFacade.create("1", "1", "CHECK");
+        
+        long transactionID = transactionEntityFacade.create("DEBIT", 2, accountID);
+        Account account = accountEntityFacade.find(accountID);
+        
+        Transaction transaction = transactionEntityFacade.find(transactionID);
+
+        
+        System.out.println(transaction);
+
+        assertEquals(transaction.getTransactionType(), "DEBIT");
+        assertEquals(transaction.getAmount(), 2);
+        assertEquals(transaction.getAccount().getID(), accountID);
+        assertEquals(transaction.getStatus(), "FAILED");
+        assertEquals(account.getHoldings(), 0);
     }
 
     @Test
@@ -51,7 +77,8 @@ public class TransactionEntityFacadeTest {
 
         for (int i = 0; i < 4; i++) {
             long id = transactionEntityFacade.create(typeArray[i], amountArray[i], accountID);
-            transactionList.add(transactionEntityFacade.find(id));
+            Transaction transactionToAdd = transactionEntityFacade.find(id);
+            transactionList.add(transactionToAdd);
         }
 
         long diversionAccountID = accountEntityFacade.create("1", "2", "CHECK");
@@ -91,7 +118,8 @@ public class TransactionEntityFacadeTest {
 
         for (int i = 0; i < 4; i++) {
             long id = transactionEntityFacade.create(typeArray[i], amountArray[i], accountIDArray[i]);
-            transactionList.add(transactionEntityFacade.find(id));
+            Transaction transactionToAdd = transactionEntityFacade.find(id);
+            transactionList.add(transactionToAdd);
         }
         List<Transaction> transactionFindAllList = transactionEntityFacade.findAll();
 

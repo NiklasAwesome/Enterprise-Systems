@@ -1,6 +1,7 @@
 package se.liu.ida.tdp024.account.data.api.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public interface Transaction extends Serializable {
 
@@ -16,9 +17,9 @@ public interface Transaction extends Serializable {
 
     public void setAmount(int amount);
 
-    public String getTimestamp();
+    public Date getTimestamp();
 
-    public void setTimestamp(String timestamp);
+    public void setTimestamp(Date timestamp);
 
     public String getStatus();
 

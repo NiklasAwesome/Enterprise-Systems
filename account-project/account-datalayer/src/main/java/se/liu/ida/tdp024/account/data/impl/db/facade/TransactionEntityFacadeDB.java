@@ -1,5 +1,6 @@
 package se.liu.ida.tdp024.account.data.impl.db.facade;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,7 +13,7 @@ import se.liu.ida.tdp024.account.data.impl.db.entity.AccountDB;
 import se.liu.ida.tdp024.account.data.impl.db.entity.TransactionDB;
 import se.liu.ida.tdp024.account.data.impl.db.util.EMF;
 
-public class TransactionEntityFacadeDB implements TransactionEntityFacade{
+public class TransactionEntityFacadeDB implements TransactionEntityFacade {
 
     @Override
     public long create(String transactionType, int amount, long accountID) {
@@ -26,7 +27,26 @@ public class TransactionEntityFacadeDB implements TransactionEntityFacade{
 
             transaction.setTransactionType(transactionType);
             transaction.setAmount(amount);
+            transaction.setTimestamp(new Date());
+            if (transactionType == "CREDIT") {
+                account.setHoldnings(account.getHoldings() + amount);
+                transaction.setStatus("OK");
+            }
+            if (transactionType == "DEBIT") {
+                if (account.getHoldings() >= amount) {
+                    account.setHoldnings(account.getHoldings() - amount);
+                    transaction.setStatus("OK");
 
+                } else {
+                    System.out.println("Insufficient funds");
+                    transaction.setStatus("FAILED");
+
+                }
+            }
+            if (transactionType != "CREDIT" && transactionType != "DEBIT") {
+                System.out.println(transactionType + " is not a valid transaction type");
+                transaction.setStatus("FAILED");
+            }
             transaction.setAccount(account);
 
             em.persist(transaction);
@@ -91,5 +111,5 @@ public class TransactionEntityFacadeDB implements TransactionEntityFacade{
         }
 
     }
-    
+
 }

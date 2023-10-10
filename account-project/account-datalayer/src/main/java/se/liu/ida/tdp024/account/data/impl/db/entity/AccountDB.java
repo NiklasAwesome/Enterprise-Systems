@@ -11,15 +11,15 @@ public class AccountDB implements Account {
 
     @Id
     @GeneratedValue
-    public long id;
+    private long id;
 
-    public String personKey;
+    private String personKey;
 
-    public String accountType;
+    private String accountType;
 
-    public String bankKey;
+    private String bankKey;
 
-    public int holdings;
+    private int holdings;
 
     // --- Setters and Getters ---//
 
@@ -71,6 +71,17 @@ public class AccountDB implements Account {
     @Override
     public void setHoldnings(int holdings) {
         this.holdings = holdings;
+    }
+
+    @Override
+    public String toString() {
+        return "{\n" 
+        + "id: " + this.id + ",\n" 
+        + "personKey: " + this.personKey + ",\n" 
+        + "accountType: " + this.accountType + ",\n" 
+        + "bankKey: " + this.bankKey + ",\n" 
+        + "holdings: " + this.holdings + "\n" 
+        + "}";
     }
 
 }
