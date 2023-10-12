@@ -8,9 +8,11 @@ import se.liu.ida.tdp024.account.logic.api.facade.AccountLogicFacade;
 public class AccountLogicFacadeTest {
 
 
+    //--- MockObjects ---//
     //--- Unit under test ---//
     public AccountLogicFacade accountLogicFacade;
     public StorageFacade storageFacade;
+
 
     @After
     public void tearDown() {

@@ -7,13 +7,20 @@ import javax.persistence.Query;
 
 import se.liu.ida.tdp024.account.data.api.entity.Account;
 import se.liu.ida.tdp024.account.data.api.facade.AccountEntityFacade;
+import se.liu.ida.tdp024.account.data.api.facade.TransactionEntityFacade;
 import se.liu.ida.tdp024.account.data.impl.db.entity.AccountDB;
 import se.liu.ida.tdp024.account.data.impl.db.util.EMF;
 
 public class AccountEntityFacadeDB implements AccountEntityFacade {
 
+    private TransactionEntityFacade transactionEntityFacade;
+
+    public AccountEntityFacadeDB(TransactionEntityFacade transactionEntityFacade) {
+        this.transactionEntityFacade = transactionEntityFacade;
+    }
+
     @Override
-    public long create(String bankKey, String personKey, String accountType) {
+    public long create(String bankKey, String personKey, String accountType, int holdings) {
         EntityManager em = EMF.getEntityManager();
 
         try {
@@ -24,7 +31,7 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             account.setBankKey(bankKey);
             account.setPersonKey(personKey);
             account.setAccountType(accountType);
-            account.setHoldnings(0);
+            account.setHoldnings(holdings);
 
             em.persist(account);
             em.getTransaction().commit();
@@ -71,6 +78,75 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             em.close();
         }
 
+    }
+
+    @Override
+    public long debit(long accountID, int amount) {
+        EntityManager em = EMF.getEntityManager();
+
+        try {
+            Account account = find(accountID);
+            em.getTransaction().begin();
+
+            boolean sufficentHoldings = account.getHoldings() >= amount;
+
+            if (sufficentHoldings) {
+                account.setHoldnings(account.getHoldings() - amount);
+                em.merge(account);
+            }
+
+            long transactionID = transactionEntityFacade.create("DEBIT", amount, account, sufficentHoldings, em);
+
+            if (transactionID == 0) {
+                em.close();
+                return 0;
+            }
+            em.getTransaction().commit();
+            return transactionID;
+
+        } catch (Exception e) {
+            return 0;
+        } finally {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            em.close();
+        }
+    }
+
+    @Override
+    public long credit(long accountID, int amount) {
+        EntityManager em = EMF.getEntityManager();
+
+        try {
+            Account account = find(accountID);
+            em.getTransaction().begin();
+
+            account.setHoldnings(account.getHoldings() + amount);
+            em.merge(account);
+
+            long transactionID = transactionEntityFacade.create("CREDIT", amount, account, true, em);
+
+            if (transactionID == 0) {
+                em.close();
+                return 0;
+            }
+            em.getTransaction().commit();
+            return transactionID;
+
+        } catch (Exception e) {
+            return 0;
+        } finally {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            em.close();
+        }
+    }
+
+    @Override
+    public TransactionEntityFacade getTransactionEntityFacade() {
+        return this.transactionEntityFacade;
     }
 
 }

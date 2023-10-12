@@ -5,17 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import se.liu.ida.tdp024.account.data.api.facade.AccountEntityFacade;
 import se.liu.ida.tdp024.account.data.api.util.StorageFacade;
 import se.liu.ida.tdp024.account.data.impl.db.facade.AccountEntityFacadeDB;
+import se.liu.ida.tdp024.account.data.impl.db.facade.TransactionEntityFacadeDB;
 import se.liu.ida.tdp024.account.data.impl.db.util.StorageFacadeDB;
 import se.liu.ida.tdp024.account.data.api.entity.Account;
+import se.liu.ida.tdp024.account.data.api.entity.Transaction;
 
 public class AccountEntityFacadeTest {
 
     // ---- Unit under test ----//
-    private AccountEntityFacade accountEntityFacade = new AccountEntityFacadeDB();
+    private AccountEntityFacade accountEntityFacade = new AccountEntityFacadeDB(new TransactionEntityFacadeDB());
     private StorageFacade storageFacade = new StorageFacadeDB();
 
     // ---- Variables for test ----//
@@ -23,13 +26,16 @@ public class AccountEntityFacadeTest {
     static final String PERSON_KEY = "098734h90723";
 
     @After
+    @Before 
     public void tearDown() {
         storageFacade.emptyStorage();
     }
 
+
+
     @Test
     public void testCreateAndFind() {
-        long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK");
+        long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK", 0);
         Account account = accountEntityFacade.find(id);
         assertEquals(account.getBankKey(), BANK_KEY);
         assertEquals(account.getPersonKey(), PERSON_KEY);
@@ -43,7 +49,7 @@ public class AccountEntityFacadeTest {
         List<Account> accountList = new ArrayList<Account>();
 
         for (int i = 0; i < 4; i++) {
-            long id = accountEntityFacade.create(bankArray[i], personArray[i], "CHECK");
+            long id = accountEntityFacade.create(bankArray[i], personArray[i], "CHECK", 0);
             accountList.add(accountEntityFacade.find(id));
         }
 
@@ -63,4 +69,48 @@ public class AccountEntityFacadeTest {
 
 
     }
+
+    @Test
+    public void testDebit() {
+        long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK", 10);
+        long transactionID = accountEntityFacade.debit(id, 10);
+        
+        Account account = accountEntityFacade.find(id);
+        Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
+
+
+        assertEquals(transaction.getStatus(), "OK");
+        assertEquals(transaction.getAmount(), 10);
+        assertEquals(account.getHoldings(), 0);
+    }
+
+    @Test
+    public void testDebitFail() {
+        long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK", 0);
+        long transactionID = accountEntityFacade.debit(id, 10);
+        
+        Account account = accountEntityFacade.find(id);
+        Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
+
+
+        assertEquals(transaction.getStatus(), "FAILED");
+        assertEquals(transaction.getAmount(), 10);
+        assertEquals(account.getHoldings(), 0);
+    }
+
+    @Test
+    public void testCredit() {
+        long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK", 0);
+        long transactionID = accountEntityFacade.credit(id, 10);
+        
+        Account account = accountEntityFacade.find(id);
+        Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
+
+
+        assertEquals(transaction.getStatus(), "OK");
+        assertEquals(transaction.getAmount(), 10);
+        assertEquals(account.getHoldings(), 10);
+    }
+
+
 }

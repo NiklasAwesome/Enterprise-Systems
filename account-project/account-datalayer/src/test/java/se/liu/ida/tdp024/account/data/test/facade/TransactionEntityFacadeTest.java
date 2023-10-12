@@ -20,7 +20,7 @@ import org.junit.Test;
 public class TransactionEntityFacadeTest {
 
     private TransactionEntityFacade transactionEntityFacade = new TransactionEntityFacadeDB();
-    private AccountEntityFacade accountEntityFacade = new AccountEntityFacadeDB();
+    private AccountEntityFacade accountEntityFacade = new AccountEntityFacadeDB(transactionEntityFacade);
     private StorageFacade storageFacade = new StorageFacadeDB();
 
     @After
@@ -30,35 +30,29 @@ public class TransactionEntityFacadeTest {
 
     @Test
     public void testCreateAndFind() {
-        long accountID = accountEntityFacade.create("1", "1", "CHECK");
-        
-        long transactionID = transactionEntityFacade.create("CREDIT", 2, accountID);
+        long accountID = accountEntityFacade.create("1", "1", "CHECK", 10);
+
+        long transactionID = accountEntityFacade.debit(accountID, 2);
         Account account = accountEntityFacade.find(accountID);
-        
+
         Transaction transaction = transactionEntityFacade.find(transactionID);
 
-        
-        System.out.println(transaction);
-
-        assertEquals(transaction.getTransactionType(), "CREDIT");
+        assertEquals(transaction.getTransactionType(), "DEBIT");
         assertEquals(transaction.getAmount(), 2);
         assertEquals(transaction.getAccount().getID(), accountID);
         assertEquals(transaction.getStatus(), "OK");
-        assertEquals(account.getHoldings(), 2);
+        assertEquals(account.getHoldings(), 8);
 
     }
 
     @Test
     public void testCreateAndFindIfFailed() {
-        long accountID = accountEntityFacade.create("1", "1", "CHECK");
-        
-        long transactionID = transactionEntityFacade.create("DEBIT", 2, accountID);
-        Account account = accountEntityFacade.find(accountID);
-        
-        Transaction transaction = transactionEntityFacade.find(transactionID);
+        long accountID = accountEntityFacade.create("1", "1", "CHECK", 0);
 
-        
-        System.out.println(transaction);
+        long transactionID = accountEntityFacade.debit(accountID, 2);
+        Account account = accountEntityFacade.find(accountID);
+
+        Transaction transaction = transactionEntityFacade.find(transactionID);
 
         assertEquals(transaction.getTransactionType(), "DEBIT");
         assertEquals(transaction.getAmount(), 2);
@@ -69,35 +63,33 @@ public class TransactionEntityFacadeTest {
 
     @Test
     public void testFindByPerson() {
-        long accountID = accountEntityFacade.create("1", "1", "CHECK");
+        long accountID = accountEntityFacade.create("1", "1", "CHECK", 100);
 
-        String[] typeArray = { "CREDIT", "CREDIT", "CREDIT", "DEBIT" };
         int[] amountArray = { 100, 50, 25, 10 };
         List<Transaction> transactionList = new ArrayList<Transaction>();
 
         for (int i = 0; i < 4; i++) {
-            long id = transactionEntityFacade.create(typeArray[i], amountArray[i], accountID);
+            long id = accountEntityFacade.debit(accountID, amountArray[i]);
             Transaction transactionToAdd = transactionEntityFacade.find(id);
             transactionList.add(transactionToAdd);
         }
 
-        long diversionAccountID = accountEntityFacade.create("1", "2", "CHECK");
-        long diversionTransactionID = transactionEntityFacade.create("CREDIT", 1, diversionAccountID);
+        long diversionAccountID = accountEntityFacade.create("1", "2", "CHECK", 0);
+        long diversionTransactionID = accountEntityFacade.credit(diversionAccountID, 4);
         Transaction diversionTransaction = transactionEntityFacade.find(diversionTransactionID);
 
         List<Transaction> transactionFindByPersonList = transactionEntityFacade.findByPerson(accountID);
 
         assertEquals(4, transactionFindByPersonList.size());
 
-        assertNotEquals(diversionTransaction.getAccount().getID(), transactionFindByPersonList.get(0).getAccount().getID());
-        assertNotEquals(diversionTransaction.getAccount().getID(), transactionFindByPersonList.get(1).getAccount().getID());
-        assertNotEquals(diversionTransaction.getAccount().getID(), transactionFindByPersonList.get(2).getAccount().getID());
-        assertNotEquals(diversionTransaction.getAccount().getID(), transactionFindByPersonList.get(3).getAccount().getID());
-
-        assertEquals(typeArray[0], transactionFindByPersonList.get(0).getTransactionType());
-        assertEquals(typeArray[1], transactionFindByPersonList.get(1).getTransactionType());
-        assertEquals(typeArray[2], transactionFindByPersonList.get(2).getTransactionType());
-        assertEquals(typeArray[3], transactionFindByPersonList.get(3).getTransactionType());
+        assertNotEquals(diversionTransaction.getAccount().getID(),
+                transactionFindByPersonList.get(0).getAccount().getID());
+        assertNotEquals(diversionTransaction.getAccount().getID(),
+                transactionFindByPersonList.get(1).getAccount().getID());
+        assertNotEquals(diversionTransaction.getAccount().getID(),
+                transactionFindByPersonList.get(2).getAccount().getID());
+        assertNotEquals(diversionTransaction.getAccount().getID(),
+                transactionFindByPersonList.get(3).getAccount().getID());
 
         assertEquals(amountArray[0], transactionFindByPersonList.get(0).getAmount());
         assertEquals(amountArray[1], transactionFindByPersonList.get(1).getAmount());
@@ -107,17 +99,16 @@ public class TransactionEntityFacadeTest {
 
     @Test
     public void testFindAll() {
-        long accountID = accountEntityFacade.create("1", "1", "CHECK");
-        long accountID2 = accountEntityFacade.create("1", "4", "CHECK");
+        long accountID = accountEntityFacade.create("1", "1", "CHECK", 0);
+        long accountID2 = accountEntityFacade.create("1", "4", "CHECK", 0);
 
         long[] accountIDArray = { accountID, accountID2, accountID, accountID2 };
-        String[] typeArray = { "CREDIT", "CREDIT", "CREDIT", "DEBIT" };
         int[] amountArray = { 100, 50, 25, 10 };
 
         List<Transaction> transactionList = new ArrayList<Transaction>();
 
         for (int i = 0; i < 4; i++) {
-            long id = transactionEntityFacade.create(typeArray[i], amountArray[i], accountIDArray[i]);
+            long id = accountEntityFacade.credit(accountIDArray[i], amountArray[i]);
             Transaction transactionToAdd = transactionEntityFacade.find(id);
             transactionList.add(transactionToAdd);
         }
@@ -129,11 +120,6 @@ public class TransactionEntityFacadeTest {
         assertEquals(accountIDArray[1], transactionFindAllList.get(1).getAccount().getID());
         assertEquals(accountIDArray[2], transactionFindAllList.get(2).getAccount().getID());
         assertEquals(accountIDArray[3], transactionFindAllList.get(3).getAccount().getID());
-
-        assertEquals(typeArray[0], transactionFindAllList.get(0).getTransactionType());
-        assertEquals(typeArray[1], transactionFindAllList.get(1).getTransactionType());
-        assertEquals(typeArray[2], transactionFindAllList.get(2).getTransactionType());
-        assertEquals(typeArray[3], transactionFindAllList.get(3).getTransactionType());
 
         assertEquals(amountArray[0], transactionFindAllList.get(0).getAmount());
         assertEquals(amountArray[1], transactionFindAllList.get(1).getAmount());

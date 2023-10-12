@@ -1,0 +1,7 @@
+{
+    "java.project.sourcePaths": [
+        "account-utils"
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.compile.nullAnalysis.mode": "disabled"
+}

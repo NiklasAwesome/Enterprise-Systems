@@ -11,5 +11,6 @@
     <module>account-logic</module>
     <module>account-rest</module>
     <module>account-xfinal-test</module>
+    <module>account-utils</module>
   </modules>
 </project>
