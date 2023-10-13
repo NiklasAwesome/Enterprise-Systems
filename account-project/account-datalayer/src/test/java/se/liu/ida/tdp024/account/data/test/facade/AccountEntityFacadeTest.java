@@ -1,6 +1,9 @@
 package se.liu.ida.tdp024.account.data.test.facade;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +29,10 @@ public class AccountEntityFacadeTest {
     static final String PERSON_KEY = "098734h90723";
 
     @After
-    @Before 
+    @Before
     public void tearDown() {
         storageFacade.emptyStorage();
     }
-
-
 
     @Test
     public void testCreateAndFind() {
@@ -65,19 +66,57 @@ public class AccountEntityFacadeTest {
         assertEquals(personArray[1], findAllList.get(1).getPersonKey());
         assertEquals(personArray[2], findAllList.get(2).getPersonKey());
         assertEquals(personArray[3], findAllList.get(3).getPersonKey());
-       
 
+    }
 
+    @Test
+    public void testFindByPerson() {
+        String personKey = "123";
+        String[] bankArray = { "1", "2", "3", "4" };
+        List<Account> accountList = new ArrayList<Account>();
+
+        for (int i = 0; i < 4; i++) {
+            long id = accountEntityFacade.create(bankArray[i], personKey, "CHECK", 0);
+            accountList.add(accountEntityFacade.find(id));
+        }
+
+        long deversionAccountID = accountEntityFacade.create("1", "1234", "CHECK", 0);
+        Account deversionAccount = accountEntityFacade.find(deversionAccountID);
+
+        List<Account> findAllList = accountEntityFacade.findByPerson(personKey);
+
+        assertEquals(4, findAllList.size());
+
+        assertEquals(bankArray[0], findAllList.get(0).getBankKey());
+        assertEquals(bankArray[1], findAllList.get(1).getBankKey());
+        assertEquals(bankArray[2], findAllList.get(2).getBankKey());
+        assertEquals(bankArray[3], findAllList.get(3).getBankKey());
+        assertEquals(personKey, findAllList.get(0).getPersonKey());
+        assertEquals(personKey, findAllList.get(1).getPersonKey());
+        assertEquals(personKey, findAllList.get(2).getPersonKey());
+        assertEquals(personKey, findAllList.get(3).getPersonKey());
+        assertNotEquals(deversionAccount.getPersonKey(), findAllList.get(0).getPersonKey());
+        assertNotEquals(deversionAccount.getPersonKey(), findAllList.get(1).getPersonKey());
+        assertNotEquals(deversionAccount.getPersonKey(), findAllList.get(2).getPersonKey());
+        assertNotEquals(deversionAccount.getPersonKey(), findAllList.get(3).getPersonKey());
+
+    }
+
+    @Test
+    public void testFindByPersonIfEmpty() {
+        List<Account> findByPersonList = accountEntityFacade.findByPerson("PersonWhoDoesntExist");
+
+        assertTrue(findByPersonList.isEmpty());
+        assertTrue(accountEntityFacade.findByPerson("PersonWhoDoesntExist").isEmpty());
     }
 
     @Test
     public void testDebit() {
         long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK", 10);
         long transactionID = accountEntityFacade.debit(id, 10);
-        
+
         Account account = accountEntityFacade.find(id);
         Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
-
 
         assertEquals(transaction.getStatus(), "OK");
         assertEquals(transaction.getAmount(), 10);
@@ -88,10 +127,9 @@ public class AccountEntityFacadeTest {
     public void testDebitFail() {
         long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK", 0);
         long transactionID = accountEntityFacade.debit(id, 10);
-        
+
         Account account = accountEntityFacade.find(id);
         Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
-
 
         assertEquals(transaction.getStatus(), "FAILED");
         assertEquals(transaction.getAmount(), 10);
@@ -99,18 +137,28 @@ public class AccountEntityFacadeTest {
     }
 
     @Test
+    public void testDebitIfAccountDoesNotExist() {
+        long transactionID = accountEntityFacade.debit(100000000, 0);
+        assertEquals(0, transactionID);
+    }
+
+    @Test
     public void testCredit() {
         long id = accountEntityFacade.create(BANK_KEY, PERSON_KEY, "CHECK", 0);
         long transactionID = accountEntityFacade.credit(id, 10);
-        
+
         Account account = accountEntityFacade.find(id);
         Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
-
 
         assertEquals(transaction.getStatus(), "OK");
         assertEquals(transaction.getAmount(), 10);
         assertEquals(account.getHoldings(), 10);
     }
 
+    @Test
+    public void testCreditIfAccountDoesNotExist() {
+        long transactionID = accountEntityFacade.credit(100000000, 1000);
+        assertEquals(0, transactionID);
+    }
 
 }

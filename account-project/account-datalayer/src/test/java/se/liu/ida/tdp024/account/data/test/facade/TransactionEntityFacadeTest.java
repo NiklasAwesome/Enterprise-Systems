@@ -11,6 +11,8 @@ import se.liu.ida.tdp024.account.data.impl.db.util.StorageFacadeDB;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,6 +97,13 @@ public class TransactionEntityFacadeTest {
         assertEquals(amountArray[1], transactionFindByPersonList.get(1).getAmount());
         assertEquals(amountArray[2], transactionFindByPersonList.get(2).getAmount());
         assertEquals(amountArray[3], transactionFindByPersonList.get(3).getAmount());
+    }
+
+    @Test
+    public void testFindByPersonIfEmpty() {
+        long accountID = accountEntityFacade.create("1", "1", "CHECK", 0);
+
+        assertTrue(transactionEntityFacade.findByPerson(accountID).isEmpty());
     }
 
     @Test

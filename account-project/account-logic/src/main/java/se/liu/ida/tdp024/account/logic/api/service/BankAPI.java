@@ -1,11 +1,12 @@
 package se.liu.ida.tdp024.account.logic.api.service;
 
-import java.util.Map;
+import java.util.List;
+import se.liu.ida.tdp024.account.utils.dto.BankDTO;
 
 public interface BankAPI {
-    public Map<String, String> listAll();
+    public List<BankDTO> listAll();
 
-    public Map<String, String> findByName(String name);
+    public BankDTO findByName(String name);
 
-    public String findByKey(String key);
+    public BankDTO findByKey(String key);
 }

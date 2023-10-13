@@ -66,6 +66,23 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
 
     @Override
     @SuppressWarnings("unchecked")
+    public List<Account> findByPerson(String personKey) {
+        EntityManager em = EMF.getEntityManager();
+
+        try {
+            Query query = em.createQuery("SELECT t FROM AccountDB t WHERE t.personKey = :personKey");
+            query.setParameter("personKey", personKey);
+            return query.getResultList();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
     public List<Account> findAll() {
         EntityManager em = EMF.getEntityManager();
 

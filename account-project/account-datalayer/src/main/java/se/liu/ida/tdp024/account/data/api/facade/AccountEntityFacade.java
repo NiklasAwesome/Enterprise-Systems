@@ -9,6 +9,8 @@ public interface AccountEntityFacade {
 
     public Account find(long id);
 
+    public List<Account> findByPerson(String personKey);
+
     public List<Account> findAll();
 
     public long debit(long id, int amount);

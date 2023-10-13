@@ -1,11 +1,12 @@
 package se.liu.ida.tdp024.account.logic.api.service;
 
-import java.util.Map;
+import java.util.List;
+import se.liu.ida.tdp024.account.utils.dto.PersonDTO;
 
 public interface PersonAPI {
-    public Map<String, String> listAll();
+    public List<PersonDTO> listAll();
 
-    public Map<String, String> findByName(String name);
+    public List<PersonDTO> findByName(String name);
 
-    public String findByKey(String key);
+    public PersonDTO findByKey(String key);
 }
