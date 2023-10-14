@@ -9,17 +9,17 @@ public interface Transaction extends Serializable {
 
     public void setID(long id);
 
-    public String getTransactionType();
+    public String getType();
 
-    public void setTransactionType(String transactionType);
+    public void setType(String type);
 
     public int getAmount();
 
     public void setAmount(int amount);
 
-    public Date getTimestamp();
+    public Date getCreated();
 
-    public void setTimestamp(Date timestamp);
+    public void setCreated(Date created);
 
     public String getStatus();
 

@@ -160,5 +160,4 @@ public class AccountEntityFacadeTest {
         long transactionID = accountEntityFacade.credit(100000000, 1000);
         assertEquals(0, transactionID);
     }
-
 }

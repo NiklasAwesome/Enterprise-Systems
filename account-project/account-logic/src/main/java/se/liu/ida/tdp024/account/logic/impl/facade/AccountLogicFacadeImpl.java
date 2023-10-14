@@ -29,10 +29,13 @@ public class AccountLogicFacadeImpl implements AccountLogicFacade {
         if (bank == null || person == null) {
             return 0;
         }
+        if (accountType.equals("CHECK") || accountType.equals("SAVINGS")) {
+            long accountID = accountEntityFacade.create(bank.getKey(), person.getKey(), accountType, 0);
+            return accountID;
 
-        long accountID = accountEntityFacade.create(bank.getKey(), person.getKey(), accountType, 0);
+        }
+        return 0;
 
-        return accountID;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class AccountLogicFacadeImpl implements AccountLogicFacade {
     public long debit(long accountID, int amount) {
         long transactionID = accountEntityFacade.debit(accountID, amount);
         Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
-        if(transaction != null && transaction.getStatus() == "OK") {
+        if(transaction != null && transaction.getStatus().equals("OK")) {
             return transactionID;
         } else {
             return 0;
@@ -55,7 +58,7 @@ public class AccountLogicFacadeImpl implements AccountLogicFacade {
     public long credit(long accountID, int amount) {
         long transactionID = accountEntityFacade.credit(accountID, amount);
         Transaction transaction = accountEntityFacade.getTransactionEntityFacade().find(transactionID);
-        if(transaction != null && transaction.getStatus() == "OK") {
+        if(transaction != null && transaction.getStatus().equals("OK")) {
             return transactionID;
         } else {
             return 0;

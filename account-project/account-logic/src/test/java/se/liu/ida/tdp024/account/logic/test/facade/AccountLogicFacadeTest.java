@@ -185,12 +185,12 @@ public class AccountLogicFacadeTest {
           }
 
           @Override
-          public String getTransactionType() {
+          public String getType() {
             return "";
           }
 
           @Override
-          public void setTransactionType(String transactionType) {
+          public void setType(String type) {
           }
 
           @Override
@@ -203,12 +203,12 @@ public class AccountLogicFacadeTest {
           }
 
           @Override
-          public Date getTimestamp() {
+          public Date getCreated() {
             return null;
           }
 
           @Override
-          public void setTimestamp(Date timestamp) {
+          public void setCreated(Date created) {
           }
 
           @Override
@@ -286,9 +286,11 @@ public class AccountLogicFacadeTest {
     String validBankName = "SWEDBANK";
 
     assertNotEquals(accountLogicFacade.create("CHECK", validPersonKey, validBankName), 0);
+    assertNotEquals(accountLogicFacade.create("SAVINGS", validPersonKey, validBankName), 0);
     assertEquals(accountLogicFacade.create("CHECK", invalidPersonKey, validBankName), 0);
     assertEquals(accountLogicFacade.create("CHECK", validPersonKey, invalidBankName), 0);
     assertEquals(accountLogicFacade.create("CHECK", invalidPersonKey, invalidBankName), 0);
+    assertEquals(accountLogicFacade.create("CREDITCARD", validPersonKey, validBankName), 0);
 
   }
 

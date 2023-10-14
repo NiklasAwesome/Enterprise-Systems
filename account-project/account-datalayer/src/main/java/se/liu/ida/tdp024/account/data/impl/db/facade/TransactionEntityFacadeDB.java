@@ -15,15 +15,15 @@ import se.liu.ida.tdp024.account.data.impl.db.util.EMF;
 public class TransactionEntityFacadeDB implements TransactionEntityFacade {
 
     @Override
-    public long create(String transactionType, int amount, Account account, boolean success, EntityManager em) {
+    public long create(String type, int amount, Account account, boolean success, EntityManager em) {
 
         try {
 
             Transaction transaction = new TransactionDB();
 
-            transaction.setTransactionType(transactionType);
+            transaction.setType(type);
             transaction.setAmount(amount);
-            transaction.setTimestamp(new Date());
+            transaction.setCreated(new Date());
             transaction.setStatus(success ? "OK" : "FAILED");
             transaction.setAccount(account);
 

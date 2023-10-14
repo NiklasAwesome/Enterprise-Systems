@@ -3,6 +3,7 @@ package se.liu.ida.tdp024.account.data.impl.db.facade;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
 import se.liu.ida.tdp024.account.data.api.entity.Account;
@@ -102,8 +103,8 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
         EntityManager em = EMF.getEntityManager();
 
         try {
-            Account account = find(accountID);
             em.getTransaction().begin();
+            Account account = em.find(AccountDB.class, accountID, LockModeType.PESSIMISTIC_READ);
 
             boolean sufficentHoldings = account.getHoldings() >= amount;
 
@@ -136,14 +137,13 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
         EntityManager em = EMF.getEntityManager();
 
         try {
-            Account account = find(accountID);
             em.getTransaction().begin();
+            Account account = em.find(AccountDB.class, accountID, LockModeType.PESSIMISTIC_READ);
 
             account.setHoldnings(account.getHoldings() + amount);
             em.merge(account);
 
             long transactionID = transactionEntityFacade.create("CREDIT", amount, account, true, em);
-
             if (transactionID == 0) {
                 em.close();
                 return 0;

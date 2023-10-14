@@ -39,7 +39,7 @@ public class TransactionEntityFacadeTest {
 
         Transaction transaction = transactionEntityFacade.find(transactionID);
 
-        assertEquals(transaction.getTransactionType(), "DEBIT");
+        assertEquals(transaction.getType(), "DEBIT");
         assertEquals(transaction.getAmount(), 2);
         assertEquals(transaction.getAccount().getID(), accountID);
         assertEquals(transaction.getStatus(), "OK");
@@ -56,7 +56,7 @@ public class TransactionEntityFacadeTest {
 
         Transaction transaction = transactionEntityFacade.find(transactionID);
 
-        assertEquals(transaction.getTransactionType(), "DEBIT");
+        assertEquals(transaction.getType(), "DEBIT");
         assertEquals(transaction.getAmount(), 2);
         assertEquals(transaction.getAccount().getID(), accountID);
         assertEquals(transaction.getStatus(), "FAILED");

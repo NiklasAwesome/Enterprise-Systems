@@ -19,12 +19,12 @@ public class TransactionDB implements Transaction {
     @GeneratedValue
     private long id;
 
-    private String transactionType;
+    private String type;
 
     private int amount;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timestamp;
+    private Date created;
 
     private String status;
 
@@ -41,12 +41,12 @@ public class TransactionDB implements Transaction {
         this.id = id;
     }
 
-    public String getTransactionType() {
-        return this.transactionType;
+    public String getType() {
+        return this.type;
     }
 
-    public void setTransactionType(String transactionType) {
-        this.transactionType = transactionType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getAmount() {
@@ -57,12 +57,12 @@ public class TransactionDB implements Transaction {
         this.amount = amount;
     }
 
-    public Date getTimestamp() {
-        return this.timestamp;
+    public Date getCreated() {
+        return this.created;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public String getStatus() {
@@ -85,9 +85,9 @@ public class TransactionDB implements Transaction {
     public String toString() {
         return "{\n" 
         + "id: " + this.id + ",\n" 
-        + "type: " + this.transactionType + ",\n" 
+        + "type: " + this.type + ",\n" 
         + "amount: " + this.amount + ",\n" 
-        + "TimeStamp: " + this.timestamp + ",\n" 
+        + "TimeStamp: " + this.created + ",\n" 
         + "Status: " + this.status + ",\n"
         + "Account: " + this.account + "\n" 
         + "}";
