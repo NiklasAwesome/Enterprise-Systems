@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import se.liu.ida.tdp024.account.data.api.entity.Account;
@@ -19,6 +20,7 @@ import se.liu.ida.tdp024.account.data.api.entity.Transaction;
 import se.liu.ida.tdp024.account.data.api.facade.AccountEntityFacade;
 import se.liu.ida.tdp024.account.data.api.facade.TransactionEntityFacade;
 import se.liu.ida.tdp024.account.data.api.util.StorageFacade;
+import se.liu.ida.tdp024.account.data.impl.db.util.StorageFacadeDB;
 import se.liu.ida.tdp024.account.logic.api.facade.AccountLogicFacade;
 import se.liu.ida.tdp024.account.logic.api.service.BankAPI;
 import se.liu.ida.tdp024.account.logic.api.service.PersonAPI;
@@ -73,11 +75,6 @@ public class AccountLogicFacadeTest {
       @Override
       public long getID() {
         return 1;
-      }
-
-      @Override
-      public void setID(long id) {
-
       }
 
       @Override
@@ -180,11 +177,6 @@ public class AccountLogicFacadeTest {
           }
 
           @Override
-          public void setID(long id) {
-
-          }
-
-          @Override
           public String getType() {
             return "";
           }
@@ -268,9 +260,10 @@ public class AccountLogicFacadeTest {
   };
   // --- Unit under test ---//
   public AccountLogicFacade accountLogicFacade = new AccountLogicFacadeImpl(aef, bankAPI, personAPI);
-  public StorageFacade storageFacade;
+  public StorageFacade storageFacade = new StorageFacadeDB();
 
   @After
+  @Before
   public void tearDown() {
     if (storageFacade != null)
       storageFacade.emptyStorage();

@@ -37,10 +37,6 @@ public class TransactionDB implements Transaction {
         return this.id;
     }
 
-    public void setID(long id) {
-        this.id = id;
-    }
-
     public String getType() {
         return this.type;
     }
@@ -79,17 +75,5 @@ public class TransactionDB implements Transaction {
 
     public void setAccount(Account account) {
         this.account = account;
-    }
-
-    @Override
-    public String toString() {
-        return "{\n" 
-        + "id: " + this.id + ",\n" 
-        + "type: " + this.type + ",\n" 
-        + "amount: " + this.amount + ",\n" 
-        + "TimeStamp: " + this.created + ",\n" 
-        + "Status: " + this.status + ",\n"
-        + "Account: " + this.account + "\n" 
-        + "}";
     }
 }

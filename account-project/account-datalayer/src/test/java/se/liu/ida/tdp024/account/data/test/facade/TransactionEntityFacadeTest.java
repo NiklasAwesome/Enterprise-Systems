@@ -43,6 +43,7 @@ public class TransactionEntityFacadeTest {
         assertEquals(transaction.getAmount(), 2);
         assertEquals(transaction.getAccount().getID(), accountID);
         assertEquals(transaction.getStatus(), "OK");
+        assertNotEquals(transaction.getCreated(), null);
         assertEquals(account.getHoldings(), 8);
 
     }

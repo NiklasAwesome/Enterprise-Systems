@@ -29,11 +29,6 @@ public class AccountDB implements Account {
     }
 
     @Override
-    public void setID(long id) {
-        this.id = id;
-    }
-
-    @Override
     public String getPersonKey() {
         return this.personKey;
     }
@@ -71,17 +66,6 @@ public class AccountDB implements Account {
     @Override
     public void setHoldnings(int holdings) {
         this.holdings = holdings;
-    }
-
-    @Override
-    public String toString() {
-        return "{\n" 
-        + "id: " + this.id + ",\n" 
-        + "personKey: " + this.personKey + ",\n" 
-        + "accountType: " + this.accountType + ",\n" 
-        + "bankKey: " + this.bankKey + ",\n" 
-        + "holdings: " + this.holdings + "\n" 
-        + "}";
     }
 
 }

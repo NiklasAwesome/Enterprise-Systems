@@ -40,6 +40,8 @@ public class AccountEntityFacadeTest {
         Account account = accountEntityFacade.find(id);
         assertEquals(account.getBankKey(), BANK_KEY);
         assertEquals(account.getPersonKey(), PERSON_KEY);
+        assertEquals(account.getAccountType(), "CHECK");
+
 
     }
 

@@ -6,8 +6,6 @@ public interface Account extends Serializable {
 
     public long getID();
 
-    public void setID(long id);
-
     public String getPersonKey();
 
     public void setPersonKey(String personKey);
