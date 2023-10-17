@@ -24,13 +24,16 @@ public class AccountController {
     private AccountLogicFacade alf = new AccountLogicFacadeImpl(new AccountEntityFacadeDB(new TransactionEntityFacadeDB()), new BankAPIRuby(), new PersonAPIRust());
 
     @RequestMapping(path="/create", produces="text/html")
-    public String create(@RequestParam(value="accounttype") String AccountType, @RequestParam(value="person") String person, @RequestParam(value="bank") String bank) {
+    public String create(@RequestParam(value="accounttype", defaultValue = "null") String AccountType, @RequestParam(value="person", defaultValue = "null") String person, @RequestParam(value="bank", defaultValue = "null") String bank) {
+        if (AccountType.equals("null") || person.equals("null") || bank.equals("null")) {
+            return "FAILED";
+        }
         long id = alf.create(AccountType, person, bank);
         return id != 0 ? "OK": "FAILED";
     }
 
     @RequestMapping(path="/find/person", produces="application/json")
-    public String find(@RequestParam(value="person", defaultValue = "1") String key){
+    public String find(@RequestParam(value="person") String key){
         List<Account> acc = alf.find(key);
         Gson gson = new Gson();
         return gson.toJson(acc);

@@ -1,6 +1,6 @@
-package se.liu.ida.tdp024.account.utils.dto;
+package se.liu.ida.tdp024.account.logic.impl.dto;
 
-public class PersonDTO {
+public class BankDTO {
     private String key;
     private String name;
 
@@ -20,7 +20,7 @@ public class PersonDTO {
         this.name = name;
     }
 
-    public PersonDTO() {
+    public BankDTO() {
     }
 
 }

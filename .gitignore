@@ -30,3 +30,8 @@ buildNumber.properties
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+
+
+# Rust
+Cargo.lock

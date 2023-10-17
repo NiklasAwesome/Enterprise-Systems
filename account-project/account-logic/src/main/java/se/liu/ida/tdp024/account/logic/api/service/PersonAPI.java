@@ -1,7 +1,8 @@
 package se.liu.ida.tdp024.account.logic.api.service;
 
 import java.util.List;
-import se.liu.ida.tdp024.account.utils.dto.PersonDTO;
+
+import se.liu.ida.tdp024.account.logic.impl.dto.PersonDTO;
 
 public interface PersonAPI {
     public List<PersonDTO> listAll();

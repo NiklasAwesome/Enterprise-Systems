@@ -1,7 +1,8 @@
 package se.liu.ida.tdp024.account.logic.api.service;
 
 import java.util.List;
-import se.liu.ida.tdp024.account.utils.dto.BankDTO;
+
+import se.liu.ida.tdp024.account.logic.impl.dto.BankDTO;
 
 public interface BankAPI {
     public List<BankDTO> listAll();

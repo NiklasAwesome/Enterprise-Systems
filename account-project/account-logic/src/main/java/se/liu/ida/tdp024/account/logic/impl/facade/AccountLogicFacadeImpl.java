@@ -7,8 +7,8 @@ import se.liu.ida.tdp024.account.data.api.facade.AccountEntityFacade;
 import se.liu.ida.tdp024.account.logic.api.facade.AccountLogicFacade;
 import se.liu.ida.tdp024.account.logic.api.service.BankAPI;
 import se.liu.ida.tdp024.account.logic.api.service.PersonAPI;
-import se.liu.ida.tdp024.account.utils.dto.BankDTO;
-import se.liu.ida.tdp024.account.utils.dto.PersonDTO;
+import se.liu.ida.tdp024.account.logic.impl.dto.BankDTO;
+import se.liu.ida.tdp024.account.logic.impl.dto.PersonDTO;
 
 public class AccountLogicFacadeImpl implements AccountLogicFacade {
     

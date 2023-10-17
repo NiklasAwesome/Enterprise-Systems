@@ -24,9 +24,9 @@ import se.liu.ida.tdp024.account.data.impl.db.util.StorageFacadeDB;
 import se.liu.ida.tdp024.account.logic.api.facade.AccountLogicFacade;
 import se.liu.ida.tdp024.account.logic.api.service.BankAPI;
 import se.liu.ida.tdp024.account.logic.api.service.PersonAPI;
+import se.liu.ida.tdp024.account.logic.impl.dto.BankDTO;
+import se.liu.ida.tdp024.account.logic.impl.dto.PersonDTO;
 import se.liu.ida.tdp024.account.logic.impl.facade.AccountLogicFacadeImpl;
-import se.liu.ida.tdp024.account.utils.dto.BankDTO;
-import se.liu.ida.tdp024.account.utils.dto.PersonDTO;
 
 public class AccountLogicFacadeTest {
 
