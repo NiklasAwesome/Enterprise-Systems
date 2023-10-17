@@ -25,8 +25,6 @@ public class AccountJsonSerializerImpl implements AccountJsonSerializer {
     @Override
     public <T> List<T> fromJsonList(String json, Class<T> clazz) {
         Type type = TypeToken.getParameterized(List.class, clazz).getType();
-        // Type clazzType = TypeToken.get(clazz).getType();
-        // Type listType = new TypeToken<List<clazzType>>(){}.getType();
         return gson.fromJson(json, type);
 
     }
