@@ -17,8 +17,8 @@ import se.liu.ida.tdp024.account.logic.api.facade.AccountLogicFacade;
 import se.liu.ida.tdp024.account.logic.impl.facade.AccountLogicFacadeImpl;
 import se.liu.ida.tdp024.account.logic.impl.service.BankAPIRuby;
 import se.liu.ida.tdp024.account.logic.impl.service.PersonAPIRust;
-import se.liu.ida.tdp024.account.utils.logger.AccountLogger;
-import se.liu.ida.tdp024.account.utils.logger.AccountLoggerKafka;
+import se.liu.ida.tdp024.account.utils.api.logger.AccountLogger;
+import se.liu.ida.tdp024.account.utils.impl.logger.AccountLoggerKafka;
 
 @RestController
 @RequestMapping("account-rest/account")

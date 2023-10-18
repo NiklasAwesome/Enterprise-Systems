@@ -1,4 +1,4 @@
-package se.liu.ida.tdp024.account.utils.logger;
+package se.liu.ida.tdp024.account.utils.api.logger;
 
 
 public interface AccountLogger {

@@ -16,6 +16,16 @@ public class PersonAPITest {
     private PersonAPI personapi = new PersonAPIRust();
 
     @Test
+    public void bankDTOTest() {
+        PersonDTO persondto = new PersonDTO();
+        persondto.setKey("1");
+        persondto.setName("kalle");
+
+        assertEquals("1", persondto.getKey());
+        assertEquals("kalle", persondto.getName());
+    }
+
+    @Test
     public void listTest() {
         List<PersonDTO> banklist = personapi.listAll();
 

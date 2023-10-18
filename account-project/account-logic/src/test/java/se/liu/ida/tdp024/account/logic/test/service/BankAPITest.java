@@ -15,6 +15,16 @@ public class BankAPITest {
     private BankAPI bankapi = new BankAPIRuby();
 
     @Test
+    public void bankDTOTest() {
+        BankDTO bankdto = new BankDTO();
+        bankdto.setKey("1");
+        bankdto.setName("superbanken");
+
+        assertEquals("1", bankdto.getKey());
+        assertEquals("superbanken", bankdto.getName());
+    }
+    
+    @Test
     public void listTest() {
         List<BankDTO> banklist = bankapi.listAll();
 

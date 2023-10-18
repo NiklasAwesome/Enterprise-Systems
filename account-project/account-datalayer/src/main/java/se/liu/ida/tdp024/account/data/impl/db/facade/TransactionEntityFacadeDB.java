@@ -12,9 +12,9 @@ import se.liu.ida.tdp024.account.data.api.facade.TransactionEntityFacade;
 import se.liu.ida.tdp024.account.data.impl.db.entity.TransactionDB;
 import se.liu.ida.tdp024.account.data.impl.db.util.EMF;
 import se.liu.ida.tdp024.account.utils.api.helpers.AccountJsonSerializer;
+import se.liu.ida.tdp024.account.utils.api.logger.AccountLogger;
 import se.liu.ida.tdp024.account.utils.impl.helpers.AccountJsonSerializerImpl;
-import se.liu.ida.tdp024.account.utils.logger.AccountLogger;
-import se.liu.ida.tdp024.account.utils.logger.AccountLoggerKafka;
+import se.liu.ida.tdp024.account.utils.impl.logger.AccountLoggerKafka;
 
 public class TransactionEntityFacadeDB implements TransactionEntityFacade {
 

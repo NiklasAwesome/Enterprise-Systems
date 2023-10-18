@@ -30,6 +30,15 @@ public class AccountControllerTest {
 
         String failedResponse = ac.create("Creditcard", "1", "SWEDBANK");
         assertEquals("FAILED", failedResponse);
+        
+        String failedAccountType = ac.create("null", "1", "SWEDBANK");
+        assertEquals("FAILED", failedAccountType);
+        
+        String failedPerson = ac.create("CHECK", "null", "SWEDBANK");
+        assertEquals("FAILED", failedPerson);
+        
+        String failedBank = ac.create("CHECK", "1", "null");
+        assertEquals("FAILED", failedBank);
     }
 
     @Test

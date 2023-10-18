@@ -1,4 +1,4 @@
-package se.liu.ida.tdp024.account.utils.logger;
+package se.liu.ida.tdp024.account.utils.impl.logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,6 +7,8 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+
+import se.liu.ida.tdp024.account.utils.api.logger.AccountLogger;
 
 
 public class AccountLoggerKafka implements AccountLogger {
