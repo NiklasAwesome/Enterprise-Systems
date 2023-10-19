@@ -3,6 +3,7 @@ package se.liu.ida.tdp024.account.utils.impl.helpers;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import se.liu.ida.tdp024.account.utils.api.helpers.HTTPHelper;
@@ -22,7 +23,7 @@ public class HTTPHelperImpl implements HTTPHelper {
         String line;
         String result = "";
         try {
-            url = new URL(urlToRead);
+            url = new URI(urlToRead).toURL();
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
