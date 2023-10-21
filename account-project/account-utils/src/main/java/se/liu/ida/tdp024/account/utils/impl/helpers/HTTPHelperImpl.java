@@ -1,11 +1,14 @@
 package se.liu.ida.tdp024.account.utils.impl.helpers;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+
+import se.liu.ida.tdp024.account.utils.api.exception.AccountServiceConfigurationException;
 import se.liu.ida.tdp024.account.utils.api.helpers.HTTPHelper;
 
 public class HTTPHelperImpl implements HTTPHelper {
@@ -13,7 +16,7 @@ public class HTTPHelperImpl implements HTTPHelper {
     // private AccountLogger accountLogger = new AccountLoggerImpl();
 
     @Override
-    public String get(String endpoint, String... parameters) {
+    public String get(String endpoint, String... parameters) throws Exception {
 
         String urlToRead = createURL(endpoint, parameters);
 
@@ -31,8 +34,10 @@ public class HTTPHelperImpl implements HTTPHelper {
                 result += line;
             }
             rd.close();
+        } catch (FileNotFoundException e) {
+            throw new AccountServiceConfigurationException("Unable to make a connection to: " + e.getMessage());
         } catch (Exception e) {
-            //accountLogger.log(e);
+            throw e;
         }
         return result;
 

@@ -2,6 +2,7 @@ package se.liu.ida.tdp024.account.logic.test.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -23,32 +24,45 @@ public class BankAPITest {
         assertEquals("1", bankdto.getKey());
         assertEquals("superbanken", bankdto.getName());
     }
-    
+
     @Test
     public void listTest() {
-        List<BankDTO> banklist = bankapi.listAll();
+        List<BankDTO> banklist;
+        try {
+            banklist = bankapi.listAll();
+            assertFalse(banklist.isEmpty());
+            assertEquals("1", banklist.get(0).getKey());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
 
-        assertFalse(banklist.isEmpty());
-        assertEquals("1", banklist.get(0).getKey());
     }
 
     @Test
     public void findNameTest() {
-        List<BankDTO> banklist = bankapi.listAll();
-        for (BankDTO bank : banklist) {
-            BankDTO bankByName = bankapi.findByName(bank.getName());
-            assertEquals(bank.getKey(), bankByName.getKey());
-            assertEquals(bank.getName(), bankByName.getName());
+        try {
+            List<BankDTO> banklist = bankapi.listAll();
+            for (BankDTO bank : banklist) {
+                BankDTO bankByName = bankapi.findByName(bank.getName());
+                assertEquals(bank.getKey(), bankByName.getKey());
+                assertEquals(bank.getName(), bankByName.getName());
+            }
+        } catch (Exception e) {
+            fail(e.getMessage());
         }
     }
 
     @Test
     public void findKeyTest() {
-        List<BankDTO> banklist = bankapi.listAll();
-        for (BankDTO bank : banklist) {
-            BankDTO bankByName = bankapi.findByKey(bank.getKey());
-            assertEquals(bank.getKey(), bankByName.getKey());
-            assertEquals(bank.getName(), bankByName.getName());
+        try {
+            List<BankDTO> banklist = bankapi.listAll();
+            for (BankDTO bank : banklist) {
+                BankDTO bankByName = bankapi.findByKey(bank.getKey());
+                assertEquals(bank.getKey(), bankByName.getKey());
+                assertEquals(bank.getName(), bankByName.getName());
+            }
+        } catch (Exception e) {
+            fail(e.getMessage());
         }
     }
 }

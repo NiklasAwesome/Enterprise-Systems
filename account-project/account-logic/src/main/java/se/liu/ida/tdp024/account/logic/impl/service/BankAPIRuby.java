@@ -16,19 +16,19 @@ public class BankAPIRuby implements BankAPI {
     
 
     @Override
-    public List<BankDTO> listAll() {
+    public List<BankDTO> listAll() throws Exception {
         String resultJson = httphelper.get(bankAPIAdress + "list");
         return ajs.fromJsonList(resultJson, BankDTO.class);
     }
 
     @Override
-    public BankDTO findByName(String name) {
+    public BankDTO findByName(String name) throws Exception {
         String restultJson = httphelper.get(bankAPIAdress + "find.name", "name", name);
         return ajs.fromJson(restultJson, BankDTO.class);
     }
 
     @Override
-    public BankDTO findByKey(String key) {
+    public BankDTO findByKey(String key) throws Exception {
         String restultJson = httphelper.get(bankAPIAdress + "find.key", "key", key);
         return ajs.fromJson(restultJson, BankDTO.class);
     }

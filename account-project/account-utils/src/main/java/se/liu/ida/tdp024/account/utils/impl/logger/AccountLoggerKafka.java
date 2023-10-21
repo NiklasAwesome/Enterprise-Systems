@@ -23,6 +23,7 @@ public class AccountLoggerKafka implements AccountLogger {
     public void log(String message) {
         String now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         producer.send(new ProducerRecord<String, String>(this.topic, String.format("[%s]: ", now) + message));
+        producer.flush();
     }
 
     private Producer<String, String> createProducer() {

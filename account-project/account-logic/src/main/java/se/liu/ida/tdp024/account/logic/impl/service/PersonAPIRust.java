@@ -15,19 +15,19 @@ public class PersonAPIRust implements PersonAPI{
     String bankAPIAdress = "http://localhost:8060/person/";
 
     @Override
-    public List<PersonDTO> listAll() {
+    public List<PersonDTO> listAll() throws Exception {
         String resultJson = httphelper.get(bankAPIAdress + "list");
         return ajs.fromJsonList(resultJson, PersonDTO.class);
     }
 
     @Override
-    public List<PersonDTO> findByName(String name) {
+    public List<PersonDTO> findByName(String name) throws Exception {
         String restultJson = httphelper.get(bankAPIAdress + "find.name", "name", name);
         return ajs.fromJsonList(restultJson, PersonDTO.class);
     }
 
     @Override
-    public PersonDTO findByKey(String key) {
+    public PersonDTO findByKey(String key) throws Exception {
         String restultJson = httphelper.get(bankAPIAdress + "find.key", "key", key);
         return ajs.fromJson(restultJson, PersonDTO.class);
     }
