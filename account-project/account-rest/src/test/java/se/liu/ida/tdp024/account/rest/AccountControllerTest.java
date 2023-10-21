@@ -135,5 +135,9 @@ public class AccountControllerTest {
             ResponseEntity<String> re = ac.transactions("2");
             assertEquals(404, re.getStatusCodeValue());
         }
+        {
+            ResponseEntity<String> re = ac.transactions("Kalle");
+            assertEquals(400, re.getStatusCodeValue());
+        }
     }
 }

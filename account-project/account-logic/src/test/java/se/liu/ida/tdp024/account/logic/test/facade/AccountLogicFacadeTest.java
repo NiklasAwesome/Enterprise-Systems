@@ -100,6 +100,12 @@ public class AccountLogicFacadeTest {
       assertThrows(AccountEntityNotFoundException.class, () -> {
         accountLogicFacade.debit("0", "0");
       });
+      assertThrows(AccountInputParameterException.class, () -> {
+        accountLogicFacade.debit("0", "tusen");
+      });
+      assertThrows(AccountInputParameterException.class, () -> {
+        accountLogicFacade.debit("Kalle", "0");
+      });
     } catch (Exception e) {
       fail(e.getMessage());
     }
@@ -116,6 +122,12 @@ public class AccountLogicFacadeTest {
       assertNotEquals(0, accountLogicFacade.credit(accountID + "", "10"));
       assertThrows(AccountEntityNotFoundException.class, () -> {
         accountLogicFacade.credit("0", "0");
+      });
+      assertThrows(AccountInputParameterException.class, () -> {
+        accountLogicFacade.credit("Kalle", "0");
+      });
+      assertThrows(AccountInputParameterException.class, () -> {
+        accountLogicFacade.credit("0", "Tusen");
       });
     } catch (Exception e) {
       fail(e.getMessage());
@@ -140,6 +152,13 @@ public class AccountLogicFacadeTest {
       accountLogicFacade.credit(correctAccountID + "", "10");
       
       assertEquals(4, accountLogicFacade.transactions(correctAccountID + "").size());
+
+      assertThrows(AccountEntityNotFoundException.class, () -> {
+        accountLogicFacade.transactions("1000");
+      });
+      assertThrows(AccountInputParameterException.class, () -> {
+        accountLogicFacade.transactions("Kalle");
+      });
     } catch (Exception e) {
       fail(e.getMessage());
     }

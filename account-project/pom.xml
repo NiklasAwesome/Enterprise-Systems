@@ -64,13 +64,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>3.1.2</version>
-        <configuration>
-          <includes>
-            <include>**/account/AccountCreateTest.java</include>
-            <include>**/account/AccountFindTest.java</include>
-            <include>**/account/TransactionTest.java</include>
-          </includes>
-        </configuration>
         <executions>
           <execution>
             <goals>

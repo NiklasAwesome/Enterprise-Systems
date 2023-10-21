@@ -33,11 +33,12 @@ public class AccountController {
     public ResponseEntity<String> create(@RequestParam(value = "accounttype", defaultValue = "null") String AccountType,
             @RequestParam(value = "person", defaultValue = "null") String person,
             @RequestParam(value = "bank", defaultValue = "null") String bank) {
-        al.log("REST: " + String.format("/account-rest/account/create?accounttype=%1$s&person=%2$s&bank=%3$s", AccountType, person, bank));
         try {
+            al.log("REST: " + String.format("/account-rest/account/create?accounttype=%1$s&person=%2$s&bank=%3$s",
+                    AccountType, person, bank));
             long id = alf.create(AccountType, person, bank);
             return new ResponseEntity<String>("Account created OK with ID: " + id, HttpStatus.CREATED);
-            
+
         } catch (AccountEntityNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (AccountInputParameterException e) {
@@ -51,14 +52,12 @@ public class AccountController {
 
     @RequestMapping(path = "/find/person", produces = "application/json")
     public ResponseEntity<String> find(@RequestParam(value = "person") String key) {
-        al.log("REST: " + String.format("/account-rest/account/find/person?person=%s", key));
         try {
+            al.log("REST: " + String.format("/account-rest/account/find/person?person=%s", key));
             String response = ajs.toJson(alf.find(key));
             return new ResponseEntity<String>(response, HttpStatus.OK);
         } catch (AccountEntityNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (AccountInputParameterException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (AccountServiceConfigurationException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
@@ -67,11 +66,14 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/debit", produces = "text/html")
-    public ResponseEntity<String> debit(@RequestParam(value = "id") String id, @RequestParam(value = "amount") String amount) {
-        al.log("REST: " + String.format("/account-rest/account/debit?id=%1$s&amount=%2$s", id, amount));
+    public ResponseEntity<String> debit(@RequestParam(value = "id") String id,
+            @RequestParam(value = "amount") String amount) {
         try {
+            al.log("REST: " + String.format("/account-rest/account/debit?id=%1$s&amount=%2$s", id, amount));
             long tid = alf.debit(id, amount);
-            return new ResponseEntity<String>(String.format("Account %s debited by amount %s and that transaction has the id %s", id, amount, tid), HttpStatus.OK);
+            return new ResponseEntity<String>(String
+                    .format("Account %s debited by amount %s and that transaction has the id %s", id, amount, tid),
+                    HttpStatus.OK);
         } catch (AccountInsufficentHoldingsException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (AccountEntityNotFoundException e) {
@@ -86,11 +88,14 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/credit", produces = "text/html")
-    public ResponseEntity<String> credit(@RequestParam(value = "id") String id, @RequestParam(value = "amount") String amount) {
-        al.log("REST: " + String.format("/account-rest/account/credit?id=%1$s&amount=%2$s", id, amount));
+    public ResponseEntity<String> credit(@RequestParam(value = "id") String id,
+            @RequestParam(value = "amount") String amount) {
         try {
+            al.log("REST: " + String.format("/account-rest/account/credit?id=%1$s&amount=%2$s", id, amount));
             long tid = alf.credit(id, amount);
-            return new ResponseEntity<String>(String.format("Account %s credited by amount %s and that transaction has the id %s", id, amount, tid), HttpStatus.OK);
+            return new ResponseEntity<String>(String
+                    .format("Account %s credited by amount %s and that transaction has the id %s", id, amount, tid),
+                    HttpStatus.OK);
         } catch (AccountEntityNotFoundException e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (AccountInputParameterException e) {
@@ -104,8 +109,8 @@ public class AccountController {
 
     @RequestMapping(path = "/transactions", produces = "application/json")
     public ResponseEntity<String> transactions(@RequestParam(value = "id") String id) {
-        al.log("REST: " + "/account-rest/account/transactions");
         try {
+            al.log("REST: " + "/account-rest/account/transactions");
             String response = ajs.toJson(alf.transactions(id));
             return new ResponseEntity<String>(response, HttpStatus.OK);
         } catch (AccountEntityNotFoundException e) {

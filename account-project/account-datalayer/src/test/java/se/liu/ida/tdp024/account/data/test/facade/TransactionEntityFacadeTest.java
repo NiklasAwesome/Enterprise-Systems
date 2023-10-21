@@ -89,6 +89,12 @@ public class TransactionEntityFacadeTest {
         assertThrows(AccountInputParameterException.class, () -> {
             transactionEntityFacade.create("", 0, new AccountDB(), false, EMF.getEntityManager());
         });
+        assertThrows(AccountInputParameterException.class, () -> {
+            transactionEntityFacade.create("BEDIT", 0, null, false, EMF.getEntityManager());
+        });
+        assertThrows(AccountInputParameterException.class, () -> {
+            transactionEntityFacade.create(null, 0, null, false, EMF.getEntityManager());
+        });
     }
 
     @Test

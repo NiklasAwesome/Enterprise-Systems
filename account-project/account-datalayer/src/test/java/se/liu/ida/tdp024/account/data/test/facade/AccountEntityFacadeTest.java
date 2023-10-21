@@ -113,6 +113,13 @@ public class AccountEntityFacadeTest {
     }
 
     @Test
+    public void testFindAllException() {
+        assertThrows(AccountEntityNotFoundException.class, () -> {
+            accountEntityFacade.findAll();
+        });
+    }
+
+    @Test
     public void testFindByPerson() {
         try {
             String personKey = "123";

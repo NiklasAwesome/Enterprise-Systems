@@ -1,9 +1,11 @@
 package se.liu.ida.tdp024.account.utils.test.logger;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import se.liu.ida.tdp024.account.utils.api.exception.AccountServiceConfigurationException;
 import se.liu.ida.tdp024.account.utils.api.logger.AccountLogger;
 import se.liu.ida.tdp024.account.utils.impl.logger.AccountLoggerKafka;
 
@@ -12,7 +14,11 @@ public class AccountLoggerTest {
 
     @Test
     public void logtest() {
-        al.log("hello i am a test");
+        try {
+            al.log("hello i am a test");
+        } catch (AccountServiceConfigurationException e) {
+            fail(e.getMessage());
+        }
         assertTrue(true);
     }
 }

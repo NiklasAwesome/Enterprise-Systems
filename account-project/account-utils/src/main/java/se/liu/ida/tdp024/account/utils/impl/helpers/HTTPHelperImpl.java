@@ -43,7 +43,7 @@ public class HTTPHelperImpl implements HTTPHelper {
 
     }
 
-    private String createURL(String endpoint, String... parameters) {
+    private String createURL(String endpoint, String... parameters) throws Exception {
 
         StringBuilder urlBuilder = new StringBuilder(endpoint);
         for (int i = 0; i < (parameters.length - 1); i += 2) {
@@ -59,7 +59,7 @@ public class HTTPHelperImpl implements HTTPHelper {
 
                 urlBuilder.append(parameterName).append("=").append(parameterValue);
             } catch (Exception e) {
-                //accountLogger.log(e);
+                throw e;
             }
 
         }
