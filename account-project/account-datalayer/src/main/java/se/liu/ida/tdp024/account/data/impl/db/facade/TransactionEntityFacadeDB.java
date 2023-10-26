@@ -31,7 +31,7 @@ public class TransactionEntityFacadeDB implements TransactionEntityFacade {
 
         try {
             if (type == null || type.isEmpty() || account == null || em == null) {
-                throw new AccountInputParameterException("Invalid parameters");
+                throw new AccountInputParameterException("emptyInput");
             }
 
             Transaction transaction = new TransactionDB();
@@ -48,8 +48,7 @@ public class TransactionEntityFacadeDB implements TransactionEntityFacade {
         } catch (AccountInputParameterException e) {
             throw e;
         } catch (TransactionRequiredException | IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException(
-                    "Error creating transaction due to internal error: " + e.getMessage());
+            throw new AccountServiceConfigurationException("transactionCreate");
         } catch (Exception e) {
             throw e;
         }
@@ -63,16 +62,14 @@ public class TransactionEntityFacadeDB implements TransactionEntityFacade {
         try {
             Transaction transaction = em.find(TransactionDB.class, transactionID);
             if (transaction == null) {
-                throw new AccountEntityNotFoundException(
-                        String.format("The transaction with ID: %s was not found", transactionID));
+                throw new AccountEntityNotFoundException("transaction");
             }
             return transaction;
         } catch (AccountEntityNotFoundException e) {
             throw e;
 
         } catch (IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException(
-                    "Error finding transaction due to internal error: " + e.getMessage());
+            throw new AccountServiceConfigurationException("transactionFind");
 
         } catch (Exception e) {
             throw e;
@@ -94,15 +91,13 @@ public class TransactionEntityFacadeDB implements TransactionEntityFacade {
             Query query = em.createQuery("SELECT t FROM TransactionDB t WHERE t.account.id = :accountID");
             query.setParameter("accountID", accountID);
             if (query.getResultList().isEmpty()) {
-                throw new AccountEntityNotFoundException(
-                        String.format("The transactions with accountID: %s was not found", accountID));
+                throw new AccountEntityNotFoundException("transaction");
             }
             return query.getResultList();
         } catch (AccountEntityNotFoundException e) {
             throw e;
         } catch (IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException(
-                    "Error finding transaction due to internal error: " + e.getMessage());
+            throw new AccountServiceConfigurationException("transactionFindByPerson");
         } catch (Exception e) {
             throw e;
         } finally {
@@ -121,14 +116,13 @@ public class TransactionEntityFacadeDB implements TransactionEntityFacade {
         try {
             Query query = em.createQuery("SELECT t FROM TransactionDB t");
             if (query.getResultList().isEmpty()) {
-                throw new AccountEntityNotFoundException("No transactions was not found");
+                throw new AccountEntityNotFoundException("transaction");
             }
             return query.getResultList();
         } catch (AccountEntityNotFoundException e) {
             throw e;
         } catch (IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException(
-                    "Error finding transaction due to internal error: " + e.getMessage());
+            throw new AccountServiceConfigurationException("transactionFindAll");
         } catch (Exception e) {
             throw e;
         } finally {

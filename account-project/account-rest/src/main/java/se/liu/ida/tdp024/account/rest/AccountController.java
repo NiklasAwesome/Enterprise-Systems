@@ -40,11 +40,26 @@ public class AccountController {
             return new ResponseEntity<String>("Account created OK with ID: " + id, HttpStatus.CREATED);
 
         } catch (AccountEntityNotFoundException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            String errorMessage = "Entity not found";
+            if(e.getMessage().equals("person")){
+                errorMessage = "Failed because person is not a valid customer";
+            }
+            if(e.getMessage().equals("bank")){
+                errorMessage = "Failed because bank is not a valid bank";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.NOT_FOUND);
         } catch (AccountInputParameterException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            String errorMessage = "WrongInput";
+            if (e.getMessage().equals("accountType")) {
+                errorMessage = "Invalid account type";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         } catch (AccountServiceConfigurationException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+            String errorMessage = "ServiceError";
+            if (e.getMessage().equals("accountCreate")) {
+                errorMessage = "Internal Error when creating Account";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -57,9 +72,17 @@ public class AccountController {
             String response = ajs.toJson(alf.find(key));
             return new ResponseEntity<String>(response, HttpStatus.OK);
         } catch (AccountEntityNotFoundException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            String errorMessage = "Entity not found";
+            if(e.getMessage().equals("account")){
+                errorMessage = "Failed because account was not found";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.NOT_FOUND);
         } catch (AccountServiceConfigurationException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+            String errorMessage = "ServiceError";
+            if (e.getMessage().equals("accountFindByPerson")) {
+                errorMessage = "Internal Error when finding Account";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -75,13 +98,28 @@ public class AccountController {
                     .format("Account %s debited by amount %s and that transaction has the id %s", id, amount, tid),
                     HttpStatus.OK);
         } catch (AccountInsufficentHoldingsException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("Account has insufficent funds", HttpStatus.BAD_REQUEST);
         } catch (AccountEntityNotFoundException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            String errorMessage = "Entity not found";
+            if(e.getMessage().equals("account")){
+                errorMessage = "Failed because account was not found";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.NOT_FOUND);
         } catch (AccountInputParameterException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            String errorMessage = "WrongInput";
+            if (e.getMessage().equals("parseError")) {
+                errorMessage = "The inputs could not be parsed as numbers";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         } catch (AccountServiceConfigurationException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+            String errorMessage = "ServiceError";
+            if (e.getMessage().equals("accountDebit")) {
+                errorMessage = "Internal Error when debiting Account";
+            }
+            if (e.getMessage().equals("transactionCreate")) {
+                errorMessage = "Internal Error when creating transaction";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -97,11 +135,26 @@ public class AccountController {
                     .format("Account %s credited by amount %s and that transaction has the id %s", id, amount, tid),
                     HttpStatus.OK);
         } catch (AccountEntityNotFoundException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            String errorMessage = "Entity not found";
+            if(e.getMessage().equals("account")){
+                errorMessage = "Failed because account was not found";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.NOT_FOUND);
         } catch (AccountInputParameterException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            String errorMessage = "WrongInput";
+            if (e.getMessage().equals("parseError")) {
+                errorMessage = "The inputs could not be parsed as numbers";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         } catch (AccountServiceConfigurationException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+            String errorMessage = "ServiceError";
+            if (e.getMessage().equals("accountCredit")) {
+                errorMessage = "Internal Error when crediting Account";
+            }
+            if (e.getMessage().equals("transactionCreate")) {
+                errorMessage = "Internal Error when creating transaction";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -114,11 +167,23 @@ public class AccountController {
             String response = ajs.toJson(alf.transactions(id));
             return new ResponseEntity<String>(response, HttpStatus.OK);
         } catch (AccountEntityNotFoundException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+            String errorMessage = "Entity not found";
+            if(e.getMessage().equals("transaction")){
+                errorMessage = "Failed because transaction was not found";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.NOT_FOUND);
         } catch (AccountInputParameterException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            String errorMessage = "WrongInput";
+            if (e.getMessage().equals("parseError")) {
+                errorMessage = "The inputs could not be parsed as numbers";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.BAD_REQUEST);
         } catch (AccountServiceConfigurationException e) {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
+            String errorMessage = "ServiceError";
+            if (e.getMessage().equals("transactionFindByPerson")) {
+                errorMessage = "Internal Error when finding transaction";
+            }
+            return new ResponseEntity<String>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

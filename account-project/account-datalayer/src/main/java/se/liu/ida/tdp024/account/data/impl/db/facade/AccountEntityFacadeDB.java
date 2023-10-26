@@ -33,7 +33,7 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
         try {
             if (bankKey == null || bankKey.isEmpty() || personKey == null || personKey.isEmpty() || accountType == null
                     || accountType.isEmpty()) {
-                throw new AccountInputParameterException("Error creating account due to invalid parameters");
+                throw new AccountInputParameterException("emptyInput");
             }
             em.getTransaction().begin();
 
@@ -53,8 +53,7 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             throw e;
 
         } catch (IllegalStateException | RollbackException | IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException(
-                    "Error creating account due to internal error" + e.getMessage());
+            throw new AccountServiceConfigurationException("accountCreate");
 
         } catch (Exception e) {
             throw e;
@@ -74,14 +73,14 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
         try {
             Account account = em.find(AccountDB.class, id);
             if (account == null) {
-                throw new AccountEntityNotFoundException(String.format("The account with id: %s was not found", id));
+                throw new AccountEntityNotFoundException("account");
             }
             return account;
 
         } catch (AccountEntityNotFoundException e) {
             throw e;
         } catch (IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException("Error finding account due to internal error: " + e.getMessage());
+            throw new AccountServiceConfigurationException("accountFind");
         } catch (Exception e) {
             throw e;
         } finally {
@@ -102,14 +101,13 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             Query query = em.createQuery("SELECT t FROM AccountDB t WHERE t.personKey = :personKey");
             query.setParameter("personKey", personKey);
             if (query.getResultList().isEmpty()) {
-                throw new AccountEntityNotFoundException(
-                        String.format("The account with personKey: %s was not found", personKey));
+                throw new AccountEntityNotFoundException("account");
             }
             return query.getResultList();
         } catch (AccountEntityNotFoundException e) {
             throw e;
         } catch (IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException("Error finding account due to internal error: " + e.getMessage());
+            throw new AccountServiceConfigurationException("accountFindByPerson");
         } catch (Exception e) {
             throw e;
         } finally {
@@ -129,13 +127,13 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             Query query = em.createQuery("SELECT a FROM AccountDB a");
             List<Account> l = query.getResultList();
             if (l.isEmpty()) {
-                throw new AccountEntityNotFoundException("No accounts found");
+                throw new AccountEntityNotFoundException("account");
             }
             return l;
         } catch (AccountEntityNotFoundException e) {
             throw e;
         } catch (IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException("Error finding account due to internal error: " + e.getMessage());
+            throw new AccountServiceConfigurationException("accountFindAll");
         } catch (Exception e) {
             throw e;
         } finally {
@@ -156,8 +154,7 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             em.getTransaction().begin();
             Account account = em.find(AccountDB.class, accountID, LockModeType.PESSIMISTIC_READ);
             if (account == null) {
-                throw new AccountEntityNotFoundException(
-                        String.format("The account with ID: %s was not found", accountID));
+                throw new AccountEntityNotFoundException("account");
             }
             boolean sufficentHoldings = account.getHoldings() >= amount;
 
@@ -170,16 +167,14 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
 
             em.getTransaction().commit();
             if (!sufficentHoldings) {
-                throw new AccountInsufficentHoldingsException(String
-                        .format("Account with id: %s does not have enough holdings for the transaction", accountID));
+                throw new AccountInsufficentHoldingsException("insufficent");
             }
             return transactionID;
 
         } catch (AccountEntityNotFoundException | AccountInsufficentHoldingsException | AccountInputParameterException e) {
             throw e;
         } catch (IllegalStateException | RollbackException | IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException(
-                    "Error debiting account due to internal error" + e.getMessage());
+            throw new AccountServiceConfigurationException("accountDebit");
 
         } catch (Exception e) {
             throw e;
@@ -201,8 +196,7 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
             em.getTransaction().begin();
             Account account = em.find(AccountDB.class, accountID, LockModeType.PESSIMISTIC_READ);
             if (account == null) {
-                throw new AccountEntityNotFoundException(
-                        String.format("The account with ID: %s was not found", accountID));
+                throw new AccountEntityNotFoundException("account");
             }
             account.setHoldnings(account.getHoldings() + amount);
             em.merge(account);
@@ -215,8 +209,7 @@ public class AccountEntityFacadeDB implements AccountEntityFacade {
         } catch (AccountEntityNotFoundException | AccountInputParameterException e) {
             throw e;
         } catch (IllegalStateException | RollbackException | IllegalArgumentException e) {
-            throw new AccountServiceConfigurationException(
-                    "Error debiting account due to internal error" + e.getMessage());
+            throw new AccountServiceConfigurationException("accountCredit");
         } catch (Exception e) {
             throw e;
         } finally {

@@ -13,11 +13,11 @@ import se.liu.ida.tdp024.account.utils.api.exception.AccountEntityNotFoundExcept
 import se.liu.ida.tdp024.account.utils.api.exception.AccountInputParameterException;
 
 public class AccountLogicFacadeImpl implements AccountLogicFacade {
-    
+
     private AccountEntityFacade accountEntityFacade;
     private BankAPI bankAPI;
     private PersonAPI personAPI;
-    
+
     public AccountLogicFacadeImpl(AccountEntityFacade accountEntityFacade, BankAPI bankAPI, PersonAPI personAPI) {
         this.accountEntityFacade = accountEntityFacade;
         this.bankAPI = bankAPI;
@@ -27,18 +27,21 @@ public class AccountLogicFacadeImpl implements AccountLogicFacade {
     @Override
     public long create(String accountType, String personKey, String bankName) throws Exception {
         try {
-            
+
             BankDTO bank = bankAPI.findByName(bankName);
             PersonDTO person = personAPI.findByKey(personKey);
-            if (bank == null || person == null) {
-                throw new AccountEntityNotFoundException("Error finding bank or person in API");
+            if (bank == null) {
+                throw new AccountEntityNotFoundException("bank");
+            }
+            if (person == null) {
+                throw new AccountEntityNotFoundException("person");
             }
             if (accountType.equals("CHECK") || accountType.equals("SAVINGS")) {
                 long accountID = accountEntityFacade.create(bank.getKey(), person.getKey(), accountType, 0);
                 return accountID;
-                
+
             } else {
-                throw new AccountInputParameterException("Account type is invalid");
+                throw new AccountInputParameterException("accountType");
             }
         } catch (Exception e) {
             throw e;
@@ -58,36 +61,36 @@ public class AccountLogicFacadeImpl implements AccountLogicFacade {
             int am = Integer.parseInt(amount);
             return accountEntityFacade.debit(id, am);
         } catch (NumberFormatException e) {
-            throw new AccountInputParameterException("Could not parse accountID/Amount");
+            throw new AccountInputParameterException("parseError");
         } catch (Exception e) {
             throw e;
         }
-        
+
     }
 
     @Override
-    public long credit(String accountID, String amount) throws Exception{
+    public long credit(String accountID, String amount) throws Exception {
         try {
             long id = Long.parseLong(accountID);
             int am = Integer.parseInt(amount);
             return accountEntityFacade.credit(id, am);
         } catch (NumberFormatException e) {
-            throw new AccountInputParameterException("Could not parse accountID/Amount");
+            throw new AccountInputParameterException("parseError");
         } catch (Exception e) {
             throw e;
         }
     }
 
     @Override
-    public List<Transaction> transactions(String accountID) throws Exception{
+    public List<Transaction> transactions(String accountID) throws Exception {
         try {
             long id = Long.parseLong(accountID);
             return accountEntityFacade.getTransactionEntityFacade().findByPerson(id);
         } catch (NumberFormatException e) {
-            throw new AccountInputParameterException("Could not parse accountID");
+            throw new AccountInputParameterException("parseError");
         } catch (Exception e) {
             throw e;
         }
     }
-    
+
 }

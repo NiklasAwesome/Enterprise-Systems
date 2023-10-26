@@ -35,6 +35,14 @@ public class AccountControllerTest {
             assertEquals(400, re.getStatusCodeValue());
         }
         {
+            ResponseEntity<String> re = ac.create("Creditcard", "1", "SWEDBANK");
+            assertEquals(400, re.getStatusCodeValue());
+        }
+        {
+            ResponseEntity<String> re = ac.create("CHECK", "", "SWEDBANK");
+            assertEquals(404, re.getStatusCodeValue());
+        }
+        {
             ResponseEntity<String> re = ac.create("CHECK", "1020938092", "SWEDBANK");
             assertEquals(404, re.getStatusCodeValue());
         }
@@ -92,6 +100,10 @@ public class AccountControllerTest {
             ResponseEntity<String> re = ac.debit("2", "0");
             assertEquals(404, re.getStatusCodeValue());
         }
+        {
+            ResponseEntity<String> re = ac.debit("1", "");
+            assertEquals(400, re.getStatusCodeValue());
+        }
     }
 
     @Test
@@ -112,6 +124,10 @@ public class AccountControllerTest {
         {
             ResponseEntity<String> re = ac.credit("2", "0");
             assertEquals(404, re.getStatusCodeValue());
+        }
+        {
+            ResponseEntity<String> re = ac.credit("1", "");
+            assertEquals(400, re.getStatusCodeValue());
         }
     }
 
